@@ -1,20 +1,19 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const isCodespaces = window.location.hostname.includes('app.github.dev');
+
+const API_BASE = isCodespaces
+  ? `${window.location.protocol}//${window.location.hostname.replace(
+      '-3000',
+      '-5000'
+    )}/api`
+  : 'http://localhost:5000/api';
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json'
   }
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
 });
 
 export default api;
